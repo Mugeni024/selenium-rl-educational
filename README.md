@@ -53,12 +53,12 @@ python3 --version
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/selenium-rl-educational.git
+git clone https://github.com/abaasi256/selenium-rl-educational.git
 cd selenium-rl-educational
 
 # Set up virtual environment
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\\Scripts\\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -254,7 +254,7 @@ pip install webdriver-manager
 ```bash
 # Ensure you're in the project directory and virtual environment is active
 cd selenium-rl-educational
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\\Scripts\\activate
 ```
 
 **Training Interruption**
@@ -324,12 +324,6 @@ MIT License - Feel free to use this project for learning, research, and educatio
 - **Inspiration**: `selenium-reinforcement-learning` by phaetto
 - **Educational Mission**: Making RL accessible through practical web automation
 - **Community**: All learners and contributors using this project for education
-
-## 📞 Contact & Support
-
-- **GitHub Issues**: Report bugs and request features
-- **Discussions**: Share your experiments and results
-- **Educational Questions**: Ask about RL concepts and implementation
 
 ---
 
