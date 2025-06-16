@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Training Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        .success-panel {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+            border: 2px solid #c3e6cb;
+        }
+        .error-message {
+            color: #721c24;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        .progress-indicator {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            background: #4CAF50;
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>🤖 AI Training Form</h1>
+        <p>The AI needs to complete this form to reach the success panel!</p>
+        
+        <div class="progress-indicator">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <form id="trainingForm">
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <select id="age" name="age">
+                    <option value="">Select Age Range</option>
+                    <option value="18-25">18-25</option>
+                    <option value="26-35">26-35</option>
+                    <option value="36-45">36-45</option>
+                    <option value="46+">46+</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Tell us about yourself</label>
+                <textarea id="description" name="description" rows="4" 
+                         placeholder="Share your interests, goals, or anything you'd like us to know..."></textarea>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="newsletter" name="newsletter">
+                <label for="newsletter">Subscribe to our newsletter</label>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the terms and conditions *</label>
+            </div>
+
+            <button type="button" id="submitBtn" onclick="attemptSubmit()">Submit Form</button>
+            <button type="button" id="resetBtn" onclick="resetForm()">Reset</button>
+        </form>
+
+        <div class="error-message" id="errorMessage"></div>
+        
+        <!-- This is the TARGET the AI needs to reach! -->
+        <div class="success-panel" id="successPanel">
+            <h2>🎉 Success!</h2>
+            <p><strong>Congratulations! The AI has successfully completed the form.</strong></p>
+            <p>Form submission details:</p>
+            <div id="submissionDetails"></div>
+            <p>Training objective achieved! ✅</p>
+        </div>
+    </div>
+
+    <script>
+        // Track form completion progress
+        let formProgress = 0;
+
+        function updateProgress() {
+            const requiredFields = ['name', 'email', 'terms'];
+            let completed = 0;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field.type === 'checkbox') {
+                    if (field.checked) completed++;
+                } else {
+                    if (field.value.trim() !== '') completed++;
+                }
+            });
+            
+            formProgress = (completed / requiredFields.length) * 100;
+            document.getElementById('progressBar').style.width = formProgress + '%';
+            
+            return formProgress === 100;
+        }
+
+        function attemptSubmit() {
+            const isComplete = updateProgress();
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successPanel');
+            
+            if (!isComplete) {
+                errorDiv.textContent = 'Please fill in all required fields and accept the terms.';
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+                return false;
+            }
+
+            // Success! Show the target panel
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'block';
+            
+            // Populate submission details
+            const details = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                age: document.getElementById('age').value || 'Not specified',
+                description: document.getElementById('description').value || 'No description provided',
+                newsletter: document.getElementById('newsletter').checked ? 'Yes' : 'No',
+                timestamp: new Date().toLocaleString()
+            };
+            
+            let detailsHTML = '<ul>';
+            Object.entries(details).forEach(([key, value]) => {
+                detailsHTML += `<li><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value}</li>`;
+            });
+            detailsHTML += '</ul>';
+            
+            document.getElementById('submissionDetails').innerHTML = detailsHTML;
+            
+            // Scroll to success panel
+            successDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            return true;
+        }
+
+        function resetForm() {
+            document.getElementById('trainingForm').reset();
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successPanel').style.display = 'none';
+            formProgress = 0;
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        // Add event listeners to update progress in real-time
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('change', updateProgress);
+                input.addEventListener('input', updateProgress);
+            });
+        });
+
+        // For debugging - expose functions globally
+        window.checkFormState = function() {
+            return {
+                progress: formProgress,
+                isComplete: updateProgress(),
+                values: {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    terms: document.getElementById('terms').checked
+                }
+            };
+        };
+    </script>
+</body>
+</html>
